@@ -6,13 +6,23 @@ import math
 import time
 
 class MiniMiner():
+    """Solves hackattic's MiniMiner problem in playground mode!
+
+    A JSON is received from the endpoint with three attributes:
+    'block', 'nonce' and 'difficulty'. MiniMiner's goal is to
+    find a 'nonce' that causes the SHA256 hash  of 'block' to
+    start with 'difficulty' 0 bits. That is, if difficulty is
+    4, the hash should start with at least 4 zero bits.
+    """
     def __init__(self, token):
+        """Initalize MiniMiner with token provided by user"""
         self.debug = False
         self.token = token
         self.get_url = 'https://hackattic.com/challenges/mini_miner/problem?access_token='
         self.post_url = 'https://hackattic.com/challenges/mini_miner/solve?access_token='
 
-    def get(self):
+    def _get(self):
+        """Return problem from endpoint"""
         url = urlopen(self.get_url + self.token)
         response = json.loads(url.read().decode())
         if self.debug:
@@ -20,20 +30,25 @@ class MiniMiner():
             time.sleep(5)
         return response
 
-    def post(self, nonce):
+    def _post(self, nonce):
+        """Send solution to endpoint and print results"""
         payload = { 'nonce' : nonce }
         r = requests.post(self.post_url + self.token + '&playground=1',
                           json=payload)
         print(r.status_code, r.json())
 
     def run(self, debug=False):
+        """MiniMiner's main function. Fetch problem, solve and send."""
         self.debug = debug
-        response = self.get()
-        nonce, digest = self.get_nonce(response['block'], response['difficulty'])
+        response = self._get()
+        nonce, digest = self._get_nonce(response['block'], response['difficulty'])
         print(nonce, digest)
-        self.post(nonce)
+        self._post(nonce)
 
-    def get_nonce(self, block, diff):
+    def _get_nonce(self, block, diff):
+        """Bruteforce nonce until expected minimum zero bits is found
+        Returns nonce and digest
+        """
         nonce = -1
         expected = '0' * math.ceil(diff/4)
         while 1:
