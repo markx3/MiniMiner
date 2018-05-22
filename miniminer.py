@@ -1,4 +1,3 @@
-from urllib.request import urlopen
 import json
 from hashlib import sha256
 import requests
@@ -21,29 +20,30 @@ class MiniMiner():
         self.get_url = 'https://hackattic.com/challenges/mini_miner/problem?access_token='
         self.post_url = 'https://hackattic.com/challenges/mini_miner/solve?access_token='
 
-    def _get(self):
+    def _get(self, url):
         """Return problem from endpoint"""
-        url = urlopen(self.get_url + self.token)
-        response = json.loads(url.read().decode())
+        response = requests.get(self.get_url + self.token).json()
         if self.debug:
             print(response)
             time.sleep(5)
         return response
 
-    def _post(self, nonce):
+    def _post(self, nonce, url):
         """Send solution to endpoint and print results"""
         payload = { 'nonce' : nonce }
         r = requests.post(self.post_url + self.token + '&playground=1',
                           json=payload)
         print(r.status_code, r.json())
+        return r.json()
 
     def run(self, debug=False):
         """MiniMiner's main function. Fetch problem, solve and send."""
         self.debug = debug
-        response = self._get()
+        response = self._get(self.get_url)
         nonce, digest = self._get_nonce(response['block'], response['difficulty'])
         print(nonce, digest)
-        self._post(nonce)
+        return(self._post(nonce, self.post_url))
+
 
     def _get_nonce(self, block, diff):
         """Bruteforce nonce until expected minimum zero bits is found
@@ -63,4 +63,4 @@ class MiniMiner():
 
 if __name__ == '__main__':
     mm = MiniMiner('87e086701c983f67')
-    mm.run(debug=False)
+    mm.run(debug=True)
