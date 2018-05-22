@@ -3,6 +3,7 @@ from hashlib import sha256
 import requests
 import math
 import time
+from constants import token
 
 class MiniMiner():
     """Solves hackattic's MiniMiner problem in playground mode!
@@ -62,5 +63,5 @@ class MiniMiner():
                 return nonce, digest
 
 if __name__ == '__main__':
-    mm = MiniMiner('87e086701c983f67')
+    mm = MiniMiner(token)
     mm.run(debug=True)
