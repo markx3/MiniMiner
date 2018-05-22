@@ -10,25 +10,24 @@ class MiniMinerTest(unittest.TestCase):
     test block is 45.
     """
 
-    test_problem = json.dumps({'block':{'data':[],'nonce':None}, 'difficulty':8})
-    passed = json.dumps({'result': 'passed (playground mode)'})
+    test_problem = {'block':{'data':[],'nonce':None}, 'difficulty':8}
+    passed = {'result': 'passed (playground mode)'}
 
 
     def setUp(self):
         get_patcher = patch('miniminer.requests.get')
         self.mock_get = get_patcher.start()
         self.mock_get.return_value.status_code = 200
-        self.mock_get.return_value.json.return_value = json.loads(self.test_problem)
+        self.mock_get.return_value.json.return_value = self.test_problem
 
         post_patcher = patch('miniminer.requests.post')
         self.mock_post = post_patcher.start()
         self.mock_post.return_value.status_code = 200
-        self.mock_post.return_value.json.return_value = json.loads(self.passed)
+        self.mock_post.return_value.json.return_value = self.passed
 
     def test_get(self):
-        test_problem_json = json.dumps(self.test_problem)
+        test_problem_json = self.test_problem
         response = MiniMiner('someToken')._get('null')
-        response = json.dumps(response)
         self.assertEqual(response, self.test_problem)
 
     def test_post(self):
@@ -37,7 +36,7 @@ class MiniMinerTest(unittest.TestCase):
         self.assertEqual(response, passed)
 
     def test_get_nonce(self):
-        test_problem = json.loads(self.test_problem)
+        test_problem = self.test_problem
         block = test_problem['block']
         diff = test_problem['difficulty']
         nonce = MiniMiner('token')._get_nonce(block, diff)
@@ -45,7 +44,6 @@ class MiniMinerTest(unittest.TestCase):
 
     def test_run(self):
         result = MiniMiner('token').run()
-        result = json.dumps(result)
         self.assertEqual(result, self.passed)
 
 if __name__ == '__main__':
