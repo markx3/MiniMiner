@@ -34,7 +34,6 @@ class MiniMinerTest(unittest.TestCase):
     def test_post(self):
         passed = {'result': 'passed (playground mode)'}
         response = MiniMiner('someToken')._post(45, 'null')
-        print(self.mock_post.value)
         self.assertEqual(response, passed)
 
     def test_get_nonce(self):
