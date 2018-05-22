@@ -32,10 +32,10 @@ class MiniMiner():
     def _post(self, nonce, url):
         """Send solution to endpoint and print results"""
         payload = { 'nonce' : nonce }
-        r = requests.post(self.post_url + self.token + '&playground=1',
+        response = requests.post(self.post_url + self.token + '&playground=1',
                           json=payload)
-        print(r.status_code, r.json())
-        return r.json()
+        print(response.status_code, response.json())
+        return response.json()
 
     def run(self, debug=False):
         """MiniMiner's main function. Fetch problem, solve and send."""
