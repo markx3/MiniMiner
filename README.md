@@ -12,8 +12,10 @@ start with `difficulty` zero bits. That is, if `difficulty` is
 To run Mini Miner you should have an access token from hackattic. Go to
 [hackattic](https://hackattic.com/) and sign up! Once you've got your token,
 input it to `constants.py`.
-If you're running python 3.3+, you're good to go! Else, you should
-install python's latest version. If you're on a Mac, use `brew install python`.
+If you're running python 3.3+, all you need is `requests`. Install it with
+`pip install requests`. Else, you should
+install python's latest version (and then get `requests` from pip). 
+If you're on a Mac, use `brew install python`.
 On debian-based distros, use `sudo apt install python3.6`.
 
 ### Running tests
